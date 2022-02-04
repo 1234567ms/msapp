@@ -1,0 +1,41 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "ticketsystemapp"
+  namespace: "default"
+  labels:
+    app: "ticketsystemapp"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "ticketsystemapp"
+  template:
+    metadata:
+      labels:
+        app: "ticketsystemapp"
+    spec:
+      containers:
+      - name: "msapp-1"
+        image: "gcr.io/cap1-339903/github.com/1234567ms/msapp"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "ticketsystemapp-hpa-4iyc"
+  namespace: "default"
+  labels:
+    app: "ticketsystemapp"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "ticketsystemapp"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: "Resource"
+    resource:
+      name: "cpu"
+      targetAverageUtilization: 80
